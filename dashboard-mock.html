@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>想定ダッシュボード</title>
+  <style>
+    :root{--bg:#f4f7fb;--paper:#fff;--line:#d9e3ef;--ink:#12263a;--muted:#5f7082;--a:#0f766e;--b:#1d4ed8;--c:#ea580c;--d:#7c3aed}
+    *{box-sizing:border-box} body{margin:0;font-family:"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--ink)}
+    .wrap{width:min(1280px,95vw);margin:18px auto 36px}.hero{background:linear-gradient(120deg,#103451,#1d5f8d);color:#fff;border-radius:14px;padding:16px}
+    .hero h1{margin:0;font-size:28px}.hero p{margin:6px 0 0;opacity:.95}
+    .tabs{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}.tab{border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.14);color:#fff;border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13px}
+    .tab.active{background:#fff;color:#123651;font-weight:700}
+    .panel{display:none}.panel.active{display:block}
+    .kpis{margin-top:12px;display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:9px}.kpi{background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:9px}
+    .kpi .l{font-size:12px;color:var(--muted)}.kpi .v{font-size:22px;font-weight:700;margin-top:2px}
+    .grid{margin-top:12px;display:grid;grid-template-columns:repeat(12,1fr);gap:10px}.card{background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:10px}
+    .c12{grid-column:span 12}.c8{grid-column:span 8}.c6{grid-column:span 6}.c4{grid-column:span 4}
+    .card h2{margin:0;font-size:16px}.sub{margin:5px 0 8px;color:var(--muted);font-size:12px}
+    canvas{width:100%;height:270px;border:1px solid #edf2f7;border-radius:8px;background:#fcfeff}.small canvas{height:220px}
+    table{width:100%;border-collapse:collapse;font-size:13px}th,td{border:1px solid var(--line);padding:7px;text-align:left}th{background:#edf3fb}
+    .note{margin-top:10px;font-size:13px;background:#fff8ef;border:1px solid #f2dfc4;color:#7a4f14;padding:10px;border-radius:8px}
+    .legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:12px;color:var(--muted)}
+    .lg{display:inline-flex;align-items:center;gap:6px}
+    .sw{width:14px;height:3px;border-radius:2px;display:inline-block}
+    .sw.bar{height:10px;opacity:.6}
+    @media(max-width:980px){.c12,.c8,.c6,.c4{grid-column:span 12}}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <h1>想定ダッシュボード</h1>
+    <div class="tabs" id="tabs">
+      <button class="tab active" data-id="t1">経営サマリー</button>
+      <button class="tab" data-id="t2">販売分析</button>
+      <button class="tab" data-id="t3">買取分析</button>
+      <button class="tab" data-id="t4">在庫・地域</button>
+      <button class="tab" data-id="t5">エアコン工事提案</button>
+      <button class="tab" data-id="t6">商品分析</button>
+      <button class="tab" data-id="t7">顧客分析</button>
+    </div>
+  </header>
+
+  <section id="t1" class="panel active"></section>
+  <section id="t2" class="panel"></section>
+  <section id="t3" class="panel"></section>
+  <section id="t4" class="panel"></section>
+  <section id="t5" class="panel"></section>
+  <section id="t6" class="panel"></section>
+  <section id="t7" class="panel"></section>
+
+</div>
+
+<script>
+const D = {"base": {"kpi": {"sales_rows": 63857, "buy_rows": 18787, "sales_sum": 1570910422, "gross_sum": 419140840, "buy_sum": 779817631, "profit_sum": 295875839}, "months": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12"], "series": {"sales": [110895657, 103283723, 123108856, 143680757, 115774437, 118921517, 147448740, 114912626, 134256080, 149545171, 142423995, 166658863], "gross": [27717950, 30284736, 32235075, 37013490, 30112023, 32648700, 40987874, 28463873, 35956006, 41643600, 38597919, 43479594], "buy": [60888888, 54742109, 78338257, 70104867, 63364494, 58439818, 60630481, 62350740, 59726943, 64448215, 64100586, 82682233], "expectedProfit": [21595366, 19248253, 36105881, 26385731, 24391763, 22284609, 25106678, 23559569, 21396505, 23271189, 23640757, 28889538]}, "topSalesCategories": [{"name": "温水洗浄便座", "value": 4494}, {"name": "インパクトドライバー", "value": 2587}, {"name": "ミラーレスカメラ用", "value": 2333}, {"name": "ドアホン", "value": 2190}, {"name": "一眼レフカメラ用", "value": 1929}, {"name": "エアコン", "value": 1693}, {"name": "ミラーレスカメラ", "value": 1400}, {"name": "包丁", "value": 1266}, {"name": "水栓", "value": 947}, {"name": "給湯器", "value": 761}], "topSalesMakers": [{"name": "TOTO", "value": 4635}, {"name": "マキタ", "value": 3519}, {"name": "パナソニック", "value": 3268}, {"name": "キヤノン", "value": 2084}, {"name": "ニコン", "value": 1678}, {"name": "ソニー", "value": 1509}, {"name": "HiKOKI", "value": 886}, {"name": "アップル", "value": 696}, {"name": "その他", "value": 536}, {"name": "富士フイルム", "value": 530}], "topSalesChannels": [{"name": "アキバ流通プラス楽天市場店", "value": 15655}, {"name": "株式会社アキバ流通", "value": 14851}, {"name": "Yahooショッピングアキバ流通", "value": 13287}, {"name": "ヤフーオークション", "value": 7382}, {"name": "アールイーカメラ", "value": 5249}, {"name": "アールイ―カメラ（店頭）", "value": 2812}, {"name": "アキバ流通カーゴ店", "value": 2733}, {"name": "アキバ流通 アマゾン店", "value": 958}], "buyStores": [{"name": "2", "value": 9616}, {"name": "1", "value": 4675}, {"name": "3", "value": 2399}, {"name": "4", "value": 1140}, {"name": "7", "value": 934}, {"name": "5", "value": 14}, {"name": "6", "value": 9}], "buyMethods": [{"name": "2", "value": 13256}, {"name": "1", "value": 5054}, {"name": "3", "value": 477}], "leadtime": [{"name": "181-365日", "value": 1184}, {"name": "0-7日", "value": 608}, {"name": "366日以上", "value": 691}, {"name": "31-90日", "value": 3479}, {"name": "91-180日", "value": 1878}, {"name": "8-30日", "value": 3655}, {"name": "異常(<0日)", "value": 253}], "categoryScatter": [{"name": "温水洗浄便座", "x": 52178.89697374277, "y": 23.093484871377022, "size": 4494}, {"name": "インパクトドライバー", "x": 42722.49362195593, "y": 19.094007242341785, "size": 2587}, {"name": "ミラーレスカメラ用", "x": 80818.94856408058, "y": 20.452260331360268, "size": 2333}, {"name": "ドアホン", "x": 28759.874429223742, "y": 21.53089528512145, "size": 2190}, {"name": "一眼レフカメラ用", "x": 42393.08501814411, "y": 34.23787864304532, "size": 1929}, {"name": "エアコン", "x": 64351.53101004135, "y": 24.990774884209447, "size": 1693}, {"name": "ミラーレスカメラ", "x": 147215.96714285715, "y": 19.33810906400419, "size": 1400}, {"name": "包丁", "x": 22345.172985781992, "y": 65.75659172549433, "size": 1266}, {"name": "水栓", "x": 24911.595564941923, "y": 53.369259600612615, "size": 947}, {"name": "給湯器", "x": 36816.75164257556, "y": 43.88737372735116, "size": 761}, {"name": "デジタル一眼レフカメラ", "x": 52639.60471567268, "y": 35.27577615088917, "size": 721}, {"name": "コンパクトデジタルカメラ", "x": 71085.73265651439, "y": 26.951852994744225, "size": 591}, {"name": "レンズフィルター", "x": 2515.294117647059, "y": 93.04944147911736, "size": 578}, {"name": "ノートパソコン", "x": 150860.00440528634, "y": 10.773250667589501, "size": 454}, {"name": "タブレット", "x": 77888.78983833718, "y": 12.960573324090966, "size": 433}, {"name": "レンチ", "x": 51459.24119241192, "y": 25.580979184199244, "size": 369}, {"name": "店頭販売用", "x": 2599.6113074204945, "y": 99.9675134907366, "size": 283}, {"name": "浴室乾燥機", "x": 41520.263636363634, "y": 39.15675128179472, "size": 220}]}, "extra": {"customer": {"sales_unique": 25498, "buy_unique": 3901, "overlap": 119, "sales_only": 25379, "buy_only": 3782}, "buyMonthly": {"months": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12"], "buy": [60888888, 54742109, 78338257, 70104867, 63364494, 58439818, 60630481, 62350740, 59726943, 64448215, 64100586, 82682233], "profit": [21595366, 19248253, 36105881, 26385731, 24391763, 22284609, 25106678, 23559569, 21396505, 23271189, 23640757, 28889538], "count": [1271, 1340, 1758, 1793, 1599, 1445, 1600, 1640, 1560, 1499, 1502, 1780]}, "lead": {"bucket": [{"name": "181-365日", "value": 1184}, {"name": "0-7日", "value": 608}, {"name": "366日以上", "value": 691}, {"name": "31-90日", "value": 3479}, {"name": "91-180日", "value": 1878}, {"name": "8-30日", "value": 3655}, {"name": "異常(<0日)", "value": 253}], "slowCategories": [{"name": "フィルムレンジファインダーカメラ", "count": 123, "median": 171, "p90": 717.8}, {"name": "レンジファインダーカメラ用", "count": 202, "median": 82.5, "p90": 535.0}, {"name": "包丁", "count": 1266, "median": 82.0, "p90": 341.3}, {"name": "中判一眼レフカメラ用", "count": 88, "median": 64.5, "p90": 576.6}, {"name": "一眼レフカメラ用", "count": 1927, "median": 60, "p90": 265.0}, {"name": "ノートパソコン", "count": 80, "median": 59.5, "p90": 277.1}, {"name": "グリップ", "count": 106, "median": 57.0, "p90": 383.3}, {"name": "フィルム一眼レフカメラ", "count": 179, "median": 56, "p90": 513.0}, {"name": "その他カメラアクセサリー", "count": 215, "median": 51, "p90": 270.8}, {"name": "デジタル一眼レフカメラ", "count": 716, "median": 47.0, "p90": 221.2}, {"name": "マウントアダプター", "count": 113, "median": 46, "p90": 171.0}, {"name": "フラッシュ", "count": 172, "median": 41.0, "p90": 225.5}]}, "lowMarginCategories": [{"name": "ノートパソコン", "count": 454, "rate": 10.77, "sales": 68490442}, {"name": "タブレット", "count": 433, "rate": 12.96, "sales": 33725846}, {"name": "ゲーム機本体", "count": 131, "rate": 15.26, "sales": 4695558}, {"name": "インパクトドライバー", "count": 2587, "rate": 19.09, "sales": 110523091}, {"name": "ミラーレスカメラ", "count": 1400, "rate": 19.34, "sales": 206102354}, {"name": "ミラーレスカメラ用", "count": 2333, "rate": 20.45, "sales": 188550607}, {"name": "ドアホン", "count": 2190, "rate": 21.53, "sales": 62984125}, {"name": "温水洗浄便座", "count": 4494, "rate": 23.09, "sales": 234491963}, {"name": "エアコン", "count": 1693, "rate": 24.99, "sales": 108947142}, {"name": "レンチ", "count": 369, "rate": 25.58, "sales": 18988460}, {"name": "発電機", "count": 219, "rate": 26.43, "sales": 23739445}, {"name": "コンパクトデジタルカメラ", "count": 591, "rate": 26.95, "sales": 42011668}], "portfolioMakers": [{"name": "TOTO", "x": 4635, "y": 24.65, "size": 238672779}, {"name": "ソニー", "x": 1509, "y": 20.51, "size": 167624942}, {"name": "キヤノン", "x": 2084, "y": 25.42, "size": 163623521}, {"name": "マキタ", "x": 3519, "y": 23.57, "size": 162661757}, {"name": "パナソニック", "x": 3268, "y": 22.48, "size": 120822760}, {"name": "ニコン", "x": 1678, "y": 27.03, "size": 98047647}, {"name": "アップル", "x": 696, "y": 8.82, "size": 79082903}, {"name": "富士フイルム", "x": 530, "y": 22.11, "size": 44207434}, {"name": "ライカ", "x": 340, "y": 36.67, "size": 43769092}, {"name": "HiKOKI", "x": 886, "y": 24.62, "size": 41900370}, {"name": "ダイキン", "x": 409, "y": 26.52, "size": 33769798}, {"name": "三菱", "x": 377, "y": 29.24, "size": 27870161}, {"name": "シグマ", "x": 393, "y": 25.4, "size": 22076232}, {"name": "オリンパス", "x": 491, "y": 28.4, "size": 19524826}, {"name": "リンナイ", "x": 478, "y": 43.33, "size": 17960227}, {"name": "日立", "x": 329, "y": 18.88, "size": 16552863}, {"name": "ホンダ", "x": 145, "y": 23.93, "size": 15998125}, {"name": "タムロン", "x": 271, "y": 21.49, "size": 13919053}, {"name": "リクシル", "x": 253, "y": 45.78, "size": 13024789}, {"name": "ノーリツ", "x": 299, "y": 43.06, "size": 10705698}], "prefCompare": [{"name": "東京都", "sales": 265011081, "buy": 254334810, "ratio": 1.04}, {"name": "不明", "sales": 177390180, "buy": 144372279, "ratio": 1.23}, {"name": "神奈川県", "sales": 136384740, "buy": 83795541, "ratio": 1.63}, {"name": "大阪府", "sales": 109431233, "buy": 9299914, "ratio": 11.77}, {"name": "埼玉県", "sales": 105347784, "buy": 69910456, "ratio": 1.51}, {"name": "千葉県", "sales": 82962255, "buy": 88197730, "ratio": 0.94}, {"name": "愛知県", "sales": 79685971, "buy": 12923831, "ratio": 6.17}, {"name": "兵庫県", "sales": 62107027, "buy": 4884974, "ratio": 12.71}, {"name": "静岡県", "sales": 43173063, "buy": 5337644, "ratio": 8.09}, {"name": "福岡県", "sales": 37290741, "buy": 6279092, "ratio": 5.94}, {"name": "北海道", "sales": 29266426, "buy": 10660740, "ratio": 2.75}, {"name": "京都府", "sales": 26654249, "buy": 5109731, "ratio": 5.22}, {"name": "茨城県", "sales": 25059478, "buy": 13096152, "ratio": 1.91}, {"name": "新潟県", "sales": 22559828, "buy": 4804363, "ratio": 4.7}, {"name": "岐阜県", "sales": 20605762, "buy": 2236454, "ratio": 9.21}], "channelPayment": {"channels": ["株式会社アキバ流通", "アキバ流通プラス楽天市場店", "Yahooショッピングアキバ流通", "アールイーカメラ", "アールイ―カメラ（店頭）", "ヤフーオークション", "アキバ流通カーゴ店", "アキバ流通 アマゾン店"], "payments": ["楽天Pay", "銀行振込", "クレジットカード", "電子マネー(Yahoo)", "代金引換", "クレジット（Yahoo)"], "rows": [{"channel": "株式会社アキバ流通", "values": [0, 229205320, 48000, 0, 114884552, 0], "total": 344137872}, {"channel": "アキバ流通プラス楽天市場店", "values": [322707114, 0, 0, 0, 0, 0], "total": 322707114}, {"channel": "Yahooショッピングアキバ流通", "values": [0, 2872412, 0, 107832157, 2670780, 68084791], "total": 181460140}, {"channel": "アールイーカメラ", "values": [0, 43858904, 150367479, 0, 10653435, 0], "total": 204879818}, {"channel": "アールイ―カメラ（店頭）", "values": [0, 0, 74463779, 0, 0, 0], "total": 74463779}, {"channel": "ヤフーオークション", "values": [0, 8476566, 80273, 32270418, 760891, 62768265], "total": 104356413}, {"channel": "アキバ流通カーゴ店", "values": [0, 0, 0, 0, 2972466, 0], "total": 2972466}, {"channel": "アキバ流通 アマゾン店", "values": [0, 0, 0, 0, 0, 0], "total": 0}]}, "anomaly": {"days": ["2025-01-06", "2025-01-07", "2025-01-08", "2025-01-09", "2025-01-10", "2025-01-11", "2025-01-14", "2025-01-15", "2025-01-16", "2025-01-17", "2025-01-18", "2025-01-20", "2025-01-21", "2025-01-22", "2025-01-23", "2025-01-24", "2025-01-25", "2025-01-27", "2025-01-28", "2025-01-29", "2025-01-30", "2025-01-31", "2025-02-01", "2025-02-03", "2025-02-04", "2025-02-05", "2025-02-06", "2025-02-07", "2025-02-08", "2025-02-10", "2025-02-12", "2025-02-13", "2025-02-14", "2025-02-15", "2025-02-17", "2025-02-18", "2025-02-19", "2025-02-20", "2025-02-21", "2025-02-22", "2025-02-25", "2025-02-26", "2025-02-27", "2025-02-28", "2025-03-01", "2025-03-03", "2025-03-04", "2025-03-05", "2025-03-06", "2025-03-07", "2025-03-08", "2025-03-10", "2025-03-11", "2025-03-12", "2025-03-13", "2025-03-14", "2025-03-15", "2025-03-17", "2025-03-18", "2025-03-19", "2025-03-21", "2025-03-22", "2025-03-24", "2025-03-25", "2025-03-26", "2025-03-27", "2025-03-28", "2025-03-29", "2025-03-31", "2025-04-01", "2025-04-02", "2025-04-03", "2025-04-04", "2025-04-05", "2025-04-07", "2025-04-08", "2025-04-09", "2025-04-10", "2025-04-11", "2025-04-12", "2025-04-14", "2025-04-15", "2025-04-16", "2025-04-17", "2025-04-18", "2025-04-19", "2025-04-21", "2025-04-22", "2025-04-23", "2025-04-24", "2025-04-25", "2025-04-26", "2025-04-28", "2025-04-30", "2025-05-01", "2025-05-02", "2025-05-07", "2025-05-08", "2025-05-09", "2025-05-10", "2025-05-12", "2025-05-13", "2025-05-14", "2025-05-15", "2025-05-16", "2025-05-17", "2025-05-19", "2025-05-20", "2025-05-21", "2025-05-22", "2025-05-23", "2025-05-24", "2025-05-26", "2025-05-27", "2025-05-28", "2025-05-29", "2025-05-30", "2025-05-31", "2025-06-02", "2025-06-03", "2025-06-04", "2025-06-05", "2025-06-06", "2025-06-07", "2025-06-09", "2025-06-10", "2025-06-11", "2025-06-12", "2025-06-13", "2025-06-14", "2025-06-16", "2025-06-17", "2025-06-18", "2025-06-19", "2025-06-20", "2025-06-21", "2025-06-23", "2025-06-24", "2025-06-25", "2025-06-26", "2025-06-27", "2025-06-28", "2025-06-30", "2025-07-01", "2025-07-02", "2025-07-03", "2025-07-04", "2025-07-05", "2025-07-07", "2025-07-08", "2025-07-09", "2025-07-10", "2025-07-11", "2025-07-12", "2025-07-14", "2025-07-15", "2025-07-16", "2025-07-17", "2025-07-18", "2025-07-19", "2025-07-22", "2025-07-23", "2025-07-24", "2025-07-25", "2025-07-26", "2025-07-28", "2025-07-29", "2025-07-30", "2025-07-31", "2025-08-01", "2025-08-02", "2025-08-04", "2025-08-05", "2025-08-06", "2025-08-07", "2025-08-08", "2025-08-09", "2025-08-12", "2025-08-18", "2025-08-19", "2025-08-20", "2025-08-21", "2025-08-22", "2025-08-23", "2025-08-25", "2025-08-26", "2025-08-27", "2025-08-28", "2025-08-29", "2025-08-30", "2025-09-01", "2025-09-02", "2025-09-03", "2025-09-04", "2025-09-05", "2025-09-06", "2025-09-08", "2025-09-09", "2025-09-10", "2025-09-11", "2025-09-12", "2025-09-13", "2025-09-16", "2025-09-17", "2025-09-18", "2025-09-19", "2025-09-20", "2025-09-22", "2025-09-23", "2025-09-24", "2025-09-25", "2025-09-26", "2025-09-27", "2025-09-29", "2025-09-30", "2025-10-01", "2025-10-02", "2025-10-03", "2025-10-04", "2025-10-06", "2025-10-07", "2025-10-08", "2025-10-09", "2025-10-10", "2025-10-11", "2025-10-14", "2025-10-15", "2025-10-16", "2025-10-17", "2025-10-18", "2025-10-20", "2025-10-21", "2025-10-22", "2025-10-23", "2025-10-24", "2025-10-25", "2025-10-27", "2025-10-28", "2025-10-29", "2025-10-30", "2025-10-31", "2025-11-01", "2025-11-04", "2025-11-05", "2025-11-06", "2025-11-07", "2025-11-08", "2025-11-10", "2025-11-11", "2025-11-12", "2025-11-13", "2025-11-14", "2025-11-15", "2025-11-17", "2025-11-18", "2025-11-19", "2025-11-20", "2025-11-21", "2025-11-22", "2025-11-25", "2025-11-26", "2025-11-27", "2025-11-28", "2025-11-29", "2025-12-01", "2025-12-02", "2025-12-03", "2025-12-04", "2025-12-05", "2025-12-06", "2025-12-08", "2025-12-09", "2025-12-10", "2025-12-11", "2025-12-12", "2025-12-13", "2025-12-15", "2025-12-16", "2025-12-17", "2025-12-18", "2025-12-19", "2025-12-20", "2025-12-22", "2025-12-23", "2025-12-24", "2025-12-25", "2025-12-26", "2025-12-27", "2025-12-29"], "values": [9324862, 8167073, 11751558, 4013036, 5617649, 1234366, 6978838, 5381037, 5699523, 4767751, 265197, 5340660, 6134854, 3638567, 5726623, 2718641, 246459, 6059853, 4083183, 3743560, 4275535, 5726832, 1023071, 6912289, 4814309, 4583707, 5343718, 4125043, 763787, 7876580, 6998626, 4165244, 3750696, 681123, 6407152, 4763138, 4129886, 4918702, 6212462, 1933973, 8442084, 5647507, 5161914, 4628712, 704275, 5751165, 4784428, 4653371, 3026855, 5965925, 894094, 6040993, 5747311, 5511548, 5342922, 5929524, 1207552, 7226993, 5959516, 4209780, 6444159, 567095, 8120230, 7485996, 6022575, 5504641, 5899154, 2551432, 7557322, 5774580, 4774879, 6240255, 5781304, 897738, 6006164, 7140286, 4961932, 4974639, 8077970, 641886, 6537302, 5010290, 5349910, 9153162, 10672294, 1640186, 4951354, 5974497, 6794137, 8865979, 7919299, 534063, 5980230, 9026421, 6615720, 5968235, 6391454, 7346996, 5529604, 2773397, 5278544, 4690995, 4061865, 5870798, 9238955, 1553006, 4966126, 6749800, 5569868, 3527054, 5427498, 299368, 6081870, 5092804, 4384361, 3353388, 4180790, 821941, 5214271, 6050641, 4145699, 6340299, 7522602, 445913, 5606331, 4842423, 6061149, 5151260, 5190846, 303645, 6456145, 5048914, 4812647, 4837081, 6051942, 218183, 5341385, 4848957, 5940844, 4453978, 5887172, 462957, 7686233, 5984166, 5610208, 4148718, 6117307, 1395827, 6690544, 6532461, 4627320, 6141276, 5088904, 1083507, 6109952, 6901545, 6507192, 5440405, 7409788, 1218730, 6932009, 7499753, 7509105, 8586629, 949624, 7291227, 8992736, 6557188, 6122619, 9603345, 1172825, 5199803, 5682563, 4860819, 6296641, 5409000, 385368, 8383434, 8795422, 7326948, 7223798, 7420663, 8280263, 600405, 5665285, 5992050, 5641596, 3832384, 5230736, 1909278, 6404311, 6116147, 5558076, 4479592, 7653965, 502024, 7181428, 6777766, 3888994, 6741870, 7092591, 896572, 8293901, 6429551, 4189692, 6678770, 271650, 8926476, 10283, 7206050, 6165079, 8428810, 1213640, 6252798, 6896044, 5399164, 4324056, 3731336, 811054, 6429288, 7520965, 6666415, 5505327, 6176097, 985167, 6202559, 7982083, 7161103, 7542692, 728060, 8273962, 6971157, 7687753, 5115540, 6258175, 1970943, 6921449, 8314781, 7345485, 7191441, 6329119, 871333, 8137314, 9166233, 8933700, 6537438, 1549265, 5745064, 7250203, 6688109, 6391188, 3832928, 578859, 6297791, 6580887, 5153983, 3058515, 5274350, 2130668, 11115685, 11271320, 13744022, 9993569, 2121571, 9692538, 7396280, 4525052, 5465553, 9123403, 781852, 6192492, 6397605, 6815967, 6952825, 9015500, 429783, 10119505, 10115345, 7032139, 3859583, 5971114, 1501653, 9988451, 8979161, 6466261, 4871255, 6766205, 2492553, 15706788], "alerts": [{"date": "2025-12-29", "value": 15706788, "z": 3.93}, {"date": "2025-11-27", "value": 13744022, "z": 3.18}, {"date": "2025-01-08", "value": 11751558, "z": 2.42}]}}, "ac": {"kpi": {"ac_orders": 1708, "set_orders": 200, "set_rate": 11.71, "ac_sales": 119164368, "install_sales": 4608792}, "months": ["2025-01", "2025-02", "2025-03", "2025-04", "2025-05", "2025-06", "2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12"], "monthSeries": {"acOrders": [88, 113, 109, 172, 181, 193, 154, 104, 137, 175, 157, 125], "setOrders": [7, 8, 10, 25, 29, 50, 9, 5, 16, 16, 11, 14], "setRate": [7.95, 7.08, 9.17, 14.53, 16.02, 25.91, 5.84, 4.81, 11.68, 9.14, 7.01, 11.2]}, "channelStats": [{"name": "株式会社アキバ流通", "ac_orders": 1164, "set_orders": 199, "ac_sales": 81346337.0, "gross": 20647250.0, "install_sales": 4588792.0, "set_rate": 17.096219931271477}, {"name": "アキバ流通カーゴ店", "ac_orders": 136, "set_orders": 0, "ac_sales": 9339409.0, "gross": 2558981.0, "install_sales": 0.0, "set_rate": 0.0}, {"name": "Yahooショッピングアキバ流通", "ac_orders": 132, "set_orders": 0, "ac_sales": 11417888.0, "gross": 3671247.0, "install_sales": 0.0, "set_rate": 0.0}, {"name": "店頭販売", "ac_orders": 110, "set_orders": 0, "ac_sales": 5472001.0, "gross": 1114798.0, "install_sales": 0.0, "set_rate": 0.0}, {"name": "ホームギア", "ac_orders": 104, "set_orders": 1, "ac_sales": 6694923.0, "gross": 1515717.0, "install_sales": 20000.0, "set_rate": 0.9615384615384616}, {"name": "ヤフーオークション", "ac_orders": 36, "set_orders": 0, "ac_sales": 2149976.0, "gross": 603875.0, "install_sales": 0.0, "set_rate": 0.0}, {"name": "アキバ流通プラス楽天市場店", "ac_orders": 21, "set_orders": 0, "ac_sales": 2280188.0, "gross": 679313.0, "install_sales": 0.0, "set_rate": 0.0}, {"name": "アキバ流通 アマゾン店", "ac_orders": 3, "set_orders": 0, "ac_sales": 383645.0, "gross": 140007.0, "install_sales": 0.0, "set_rate": 0.0}, {"name": "アールイ―カメラ（店頭）", "ac_orders": 2, "set_orders": 0, "ac_sales": 80001.0, "gross": 15000.0, "install_sales": 0.0, "set_rate": 0.0}], "prefStats": [{"name": "東京都", "ac_orders": 322, "set_orders": 72, "set_rate": 22.36024844720497}, {"name": "神奈川県", "ac_orders": 157, "set_orders": 27, "set_rate": 17.197452229299362}, {"name": "大阪府", "ac_orders": 125, "set_orders": 8, "set_rate": 6.4}, {"name": "不明", "ac_orders": 123, "set_orders": 0, "set_rate": 0.0}, {"name": "埼玉県", "ac_orders": 120, "set_orders": 21, "set_rate": 17.5}, {"name": "千葉県", "ac_orders": 98, "set_orders": 11, "set_rate": 11.224489795918368}, {"name": "愛知県", "ac_orders": 94, "set_orders": 11, "set_rate": 11.702127659574469}, {"name": "兵庫県", "ac_orders": 52, "set_orders": 6, "set_rate": 11.538461538461538}, {"name": "静岡県", "ac_orders": 51, "set_orders": 0, "set_rate": 0.0}, {"name": "福岡県", "ac_orders": 45, "set_orders": 2, "set_rate": 4.444444444444445}, {"name": "茨城県", "ac_orders": 36, "set_orders": 4, "set_rate": 11.11111111111111}, {"name": "京都府", "ac_orders": 29, "set_orders": 3, "set_rate": 10.344827586206897}], "coTop": [{"name": "不明", "value": 1461}, {"name": "エアーコンプレッサー", "value": 40}, {"name": "ペアコイル", "value": 3}, {"name": "温水洗浄便座", "value": 2}, {"name": "電材", "value": 2}, {"name": "インパクトドライバー", "value": 1}], "opportunities": [{"channel": "株式会社アキバ流通", "ac_orders": 1164, "set_rate": 17.1, "target_gap_pt": 22.9, "est_additional_sets": 267}, {"channel": "アキバ流通カーゴ店", "ac_orders": 136, "set_rate": 0.0, "target_gap_pt": 40.0, "est_additional_sets": 54}, {"channel": "Yahooショッピングアキバ流通", "ac_orders": 132, "set_rate": 0.0, "target_gap_pt": 40.0, "est_additional_sets": 53}, {"channel": "店頭販売", "ac_orders": 110, "set_rate": 0.0, "target_gap_pt": 40.0, "est_additional_sets": 44}, {"channel": "ホームギア", "ac_orders": 104, "set_rate": 0.96, "target_gap_pt": 39.04, "est_additional_sets": 41}, {"channel": "ヤフーオークション", "ac_orders": 36, "set_rate": 0.0, "target_gap_pt": 40.0, "est_additional_sets": 14}, {"channel": "アキバ流通プラス楽天市場店", "ac_orders": 21, "set_rate": 0.0, "target_gap_pt": 40.0, "est_additional_sets": 8}]}};
+const fmt = new Intl.NumberFormat('ja-JP');
+const yen = v => fmt.format(Math.round(v||0));
+const sum = a => a.reduce((x,y)=>x+(+y||0),0);
+function setup(c){const x=c.getContext('2d');x.clearRect(0,0,c.width,c.height);x.font='11px sans-serif';return x;}
+function axes(ctx,w,h,p){ctx.strokeStyle='#bfd0de';ctx.beginPath();ctx.moveTo(p.l,p.t);ctx.lineTo(p.l,h-p.b);ctx.lineTo(w-p.r,h-p.b);ctx.stroke();}
+function shortNum(v){if(Math.abs(v)>=1e8)return (v/1e8).toFixed(1)+'億'; if(Math.abs(v)>=1e4)return (v/1e4).toFixed(1)+'万'; return Math.round(v).toString();}
+function line(id,labels,series){const c=document.getElementById(id),ctx=setup(c),w=c.width,h=c.height,p={l:50,r:14,t:14,b:30};axes(ctx,w,h,p);const max=Math.max(...series.flatMap(s=>s.data))*1.1||1,col=(w-p.l-p.r)/Math.max(1,labels.length-1),X=i=>p.l+i*col,Y=v=>h-p.b-(h-p.t-p.b)*(v/max);labels.forEach((m,i)=>{ctx.fillStyle='#687a89';ctx.fillText(String(m).slice(5),X(i)-8,h-13)});series.forEach(s=>{ctx.strokeStyle=s.color;ctx.lineWidth=2;ctx.beginPath();s.data.forEach((v,i)=>{const xx=X(i),yy=Y(v);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)});ctx.stroke();});}
+function comboLineBar(id,labels,bars,lines){const c=document.getElementById(id),ctx=setup(c),w=c.width,h=c.height,p={l:64,r:50,t:14,b:30};axes(ctx,w,h,p);const maxLine=Math.max(...lines.flatMap(s=>s.data),1)*1.1,maxBar=Math.max(...bars.flatMap(b=>b.data),1)*1.1,col=(w-p.l-p.r)/Math.max(1,labels.length),X=i=>p.l+(i+0.5)*col,YL=v=>h-p.b-(h-p.t-p.b)*(v/maxLine),YB=v=>h-p.b-(h-p.t-p.b)*(v/maxBar);for(let t=0;t<=4;t++){const vBar=maxBar*t/4,vLine=maxLine*t/4,y=YB(vBar);ctx.strokeStyle='#edf2f8';ctx.beginPath();ctx.moveTo(p.l,y);ctx.lineTo(w-p.r,y);ctx.stroke();ctx.fillStyle='#6b7d8b';ctx.fillText(shortNum(vBar),4,y+3);ctx.fillText(shortNum(vLine),w-p.r+4,y+3);}labels.forEach((m,i)=>{ctx.fillStyle='#687a89';ctx.fillText(String(m).slice(5),X(i)-8,h-13)});for(let i=0;i<labels.length;i++){const bw=Math.max(6,col*0.22),gap=2,start=X(i)-bw-gap/2;bars.forEach((b,bi)=>{const bh=(h-p.t-p.b)*((b.data[i]||0)/maxBar),x=start+bi*(bw+gap);ctx.fillStyle=b.color;ctx.fillRect(x,h-p.b-bh,bw,bh);});}lines.forEach(s=>{ctx.strokeStyle=s.color;ctx.lineWidth=2;ctx.beginPath();s.data.forEach((v,i)=>{const xx=X(i),yy=YL(v);if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy)});ctx.stroke();});}
+function hbar(id,items,color,left=170){const c=document.getElementById(id),ctx=setup(c),w=c.width,h=c.height,p={l:left,r:16,t:14,b:14};axes(ctx,w,h,p);if(!items.length)return;const max=Math.max(...items.map(d=>d.value))*1.1||1,row=(h-p.t-p.b)/items.length;items.forEach((d,i)=>{const y=p.t+i*row+row*0.18,bh=row*0.6,bw=(w-p.l-p.r)*(d.value/max);ctx.fillStyle=color;ctx.fillRect(p.l,y,bw,bh);ctx.fillStyle='#334a5d';ctx.fillText(String(d.name).slice(0,24),6,y+bh*0.8);ctx.fillStyle='#4c6070';ctx.fillText(String(Math.round(d.value)),p.l+bw+6,y+bh*0.8);});}
+function donut(id,a,b,la,lb){const c=document.getElementById(id),ctx=setup(c),w=c.width,h=c.height,cx=w/2,cy=h/2+8,r=78,total=(a+b)||1,ang=(a/total)*Math.PI*2;ctx.beginPath();ctx.moveTo(cx,cy);ctx.fillStyle='#1d4ed8';ctx.arc(cx,cy,r,-Math.PI/2,-Math.PI/2+ang);ctx.closePath();ctx.fill();ctx.beginPath();ctx.moveTo(cx,cy);ctx.fillStyle='#ea580c';ctx.arc(cx,cy,r,-Math.PI/2+ang,-Math.PI/2+Math.PI*2);ctx.closePath();ctx.fill();ctx.beginPath();ctx.fillStyle='#fff';ctx.arc(cx,cy,40,0,Math.PI*2);ctx.fill();ctx.fillStyle='#334a5d';ctx.fillText(`${la} ${(a/total*100).toFixed(1)}%`,16,20);ctx.fillText(`${lb} ${(b/total*100).toFixed(1)}%`,16,36);}
+
+function kpis(items){return `<section class="kpis">${items.map(i=>`<div class="kpi"><div class="l">${i[0]}</div><div class="v">${i[1]}</div></div>`).join('')}</section>`}
+function card(title,sub,body,cls='c6'){return `<article class="card ${cls}"><h2>${title}</h2><div class="sub">${sub||''}</div>${body}</article>`}
+
+function build(){
+  const sales=sum(D.base.series.sales), gross=sum(D.base.series.gross), buy=sum(D.base.series.buy), profit=sum(D.base.series.expectedProfit);
+  const lowMargin = D.extra.lowMarginCategories || [];
+  const c = D.extra.customer || {sales_unique:0,buy_unique:0,overlap:0,sales_only:0,buy_only:0};
+  const customerTotal = c.sales_only + c.buy_only + c.overlap;
+  const overlapShare = customerTotal ? (c.overlap / customerTotal) * 100 : 0;
+  document.getElementById('t1').innerHTML =
+    kpis([['販売件数',fmt.format(D.base.kpi.sales_rows)],['買取件数',fmt.format(D.base.kpi.buy_rows)],['販売価格合計',yen(sales)],['粗利合計',yen(gross)],['買取額合計',yen(buy)],['想定利益合計',yen(profit)]])+
+    `<div class="grid">`+
+    card('月次推移（販売/買取/合計 + 利益内訳）','左軸: 棒(月次の販売利益・買取利益) / 右軸: 折れ線(販売・買取・合計の累積)','<canvas id="t1line" width="860" height="270"></canvas><div class="legend"><span class="lg"><i class="sw" style="background:#0f766e"></i>販売（累積）</span><span class="lg"><i class="sw" style="background:#ea580c"></i>買取（累積）</span><span class="lg"><i class="sw" style="background:#1d4ed8"></i>合計（累積）</span><span class="lg"><i class="sw bar" style="background:rgba(124,58,237,0.60)"></i>販売利益（棒）</span><span class="lg"><i class="sw bar" style="background:rgba(6,182,212,0.60)"></i>買取利益（棒）</span></div>','c8')+
+    card('販売/買取 構成比','全体比率','<canvas id="t1donut" width="420" height="220"></canvas>','c4 small')+
+    `</div>`;
+
+  document.getElementById('t2').innerHTML =
+    kpis([['販売価格合計',yen(sales)],['粗利合計',yen(gross)],['平均販売単価',yen(sales/(D.base.kpi.sales_rows||1))],['粗利率',((gross/sales)*100).toFixed(1)+'%']])+
+    `<div class="grid">`+
+    card('販売売上・粗利 月次','販売データ特化','<canvas id="t2line" width="860" height="270"></canvas>','c8')+
+    card('メーカー Top10','件数','<canvas id="t2maker" width="420" height="220"></canvas>','c4 small')+
+    card('カテゴリ Top10','件数','<canvas id="t2cat" width="620" height="220"></canvas>','c6 small')+
+    card('販売部門 Top8','件数','<canvas id="t2ch" width="620" height="220"></canvas>','c6 small')+
+    `</div>`;
+
+  document.getElementById('t3').innerHTML =
+    kpis([['買取件数',fmt.format(D.base.kpi.buy_rows)],['買取額合計',yen(buy)],['想定利益合計',yen(profit)],['想定利益率',((profit/buy)*100).toFixed(1)+'%']])+
+    `<div class="grid">`+
+    card('買取額・想定利益 月次','買取データ特化','<canvas id="t3line" width="860" height="270"></canvas>','c8')+
+    card('買取店舗 別件数','コード別','<canvas id="t3store" width="420" height="220"></canvas>','c4 small')+
+    card('買取方法 別件数','コード別','<canvas id="t3method" width="620" height="220"></canvas>','c6 small')+
+    card('買取月次サマリー','件数/金額/利益','<table id="t3tbl"><thead><tr><th>月</th><th>件数</th><th>買取額</th><th>想定利益</th></tr></thead><tbody></tbody></table>','c6')+
+    `</div>`;
+
+  document.getElementById('t4').innerHTML =
+    kpis([['販売ユニーク顧客',fmt.format(D.extra.customer.sales_unique)],['買取ユニーク顧客',fmt.format(D.extra.customer.buy_unique)],['顧客重複数',fmt.format(D.extra.customer.overlap)],['重複率',((D.extra.customer.overlap/(D.extra.customer.sales_unique||1))*100).toFixed(2)+'%']])+
+    `<div class="grid">`+
+    card('リードタイム分布','仕入〜販売日差のバケット','<canvas id="t4lead" width="620" height="220"></canvas>','c6 small')+
+    card('地域別販売額 Top15','都道府県別','<canvas id="t4sales" width="620" height="220"></canvas>','c6 small')+
+    card('地域別買取額 Top15','都道府県別','<canvas id="t4buy" width="620" height="220"></canvas>','c6 small')+
+    card('顧客区分内訳','販売のみ / 買取のみ / 両方','<canvas id="t4seg" width="620" height="220"></canvas>','c6 small')+
+    `</div>`;
+
+  document.getElementById('t5').innerHTML =
+    kpis([['エアコン受注',fmt.format(D.ac.kpi.ac_orders)],['工事セット受注',fmt.format(D.ac.kpi.set_orders)],['セット率',D.ac.kpi.set_rate + '%'],['エアコン売上',yen(D.ac.kpi.ac_sales)],['工事売上',yen(D.ac.kpi.install_sales)]])+
+    `<div class="grid">`+
+    card('セット率トレンド','月次セット率(%)','<canvas id="t5rate" width="860" height="270"></canvas>','c8')+
+    card('同時購入カテゴリ Top','エアコン同時購入','<canvas id="t5co" width="420" height="220"></canvas>','c4 small')+
+    card('販売部門別 セット率','提案強化優先度','<canvas id="t5ch" width="620" height="220"></canvas>','c6 small')+
+    card('都道府県別 セット率','地域別浸透度','<canvas id="t5pref" width="620" height="220"></canvas>','c6 small')+
+    card('提案機会リスト','目標セット率40%との差分ベース','<table id="t5tbl"><thead><tr><th>販売部門</th><th>受注</th><th>セット率</th><th>追加見込セット件数</th></tr></thead><tbody></tbody></table>','c12')+
+    `</div>`;
+
+  document.getElementById('t6').innerHTML =
+    kpis([['販売カテゴリTop10件数',fmt.format(sum((D.base.topSalesCategories||[]).map(x=>x.value)))],['主要メーカーTop10件数',fmt.format(sum((D.base.topSalesMakers||[]).map(x=>x.value)))],['低粗利カテゴリ候補',fmt.format(lowMargin.length)],['低粗利カテゴリ売上合計',yen(sum(lowMargin.map(x=>x.sales||0)))],['低粗利カテゴリ平均粗利率',(lowMargin.length?(sum(lowMargin.map(x=>x.rate||0))/lowMargin.length):0).toFixed(2)+'%']])+
+    `<div class="grid">`+
+    card('商品カテゴリ Top10','件数','<canvas id="t6cat" width="620" height="220"></canvas>','c6 small')+
+    card('メーカー Top10','件数','<canvas id="t6maker" width="620" height="220"></canvas>','c6 small')+
+    card('低粗利カテゴリ Top12','粗利率(%)','<canvas id="t6low" width="620" height="220"></canvas>','c6 small')+
+    card('メーカーポートフォリオ Top10','売上規模(円)','<canvas id="t6portfolio" width="620" height="220"></canvas>','c6 small')+
+    card('商品重点管理リスト','カテゴリ別: 件数/粗利率/売上','<table id="t6tbl"><thead><tr><th>カテゴリ</th><th>件数</th><th>粗利率</th><th>売上</th></tr></thead><tbody></tbody></table>','c12')+
+    `</div>`;
+
+  document.getElementById('t7').innerHTML =
+    kpis([['販売ユニーク顧客',fmt.format(c.sales_unique)],['買取ユニーク顧客',fmt.format(c.buy_unique)],['販売のみ顧客',fmt.format(c.sales_only)],['買取のみ顧客',fmt.format(c.buy_only)],['両方実績顧客',fmt.format(c.overlap)],['重複率（全体）',overlapShare.toFixed(2)+'%']])+
+    `<div class="grid">`+
+    card('顧客セグメント構成','販売のみ / 買取のみ の構成比','<canvas id="t7seg" width="620" height="220"></canvas>','c6 small')+
+    card('買取件数 月次推移','顧客接点ボリュームの推移','<canvas id="t7count" width="620" height="220"></canvas>','c6 small')+
+    card('地域別 販売/買取 比率 Top15','高いほど販売寄り','<canvas id="t7ratio" width="620" height="220"></canvas>','c6 small')+
+    card('地域別 売上/買取 金額比較 Top15','顧客活動量の地域差','<canvas id="t7activity" width="620" height="220"></canvas>','c6 small')+
+    card('顧客セグメント一覧','分析用サマリー','<table id="t7tbl"><thead><tr><th>区分</th><th>人数</th><th>構成比</th></tr></thead><tbody></tbody></table>','c12')+
+    `</div>`;
+}
+
+function render(){
+  const salesCum=[]; let srun=0;
+  const buyCum=[]; let brun=0;
+  const totalCum=[];
+  for(let i=0;i<D.base.months.length;i++){srun+=(D.base.series.sales[i]||0); brun+=(D.base.series.buy[i]||0); salesCum.push(srun); buyCum.push(brun); totalCum.push(srun+brun);}
+  comboLineBar('t1line',D.base.months,[{data:D.base.series.gross,color:'rgba(124,58,237,0.60)'},{data:D.base.series.expectedProfit,color:'rgba(6,182,212,0.60)'}],[{data:salesCum,color:'#0f766e'},{data:buyCum,color:'#ea580c'},{data:totalCum,color:'#1d4ed8'}]);
+  donut('t1donut',sum(D.base.series.sales),sum(D.base.series.buy),'販売','買取');
+
+  line('t2line',D.base.months,[{data:D.base.series.sales,color:'#1d4ed8'},{data:D.base.series.gross,color:'#0f766e'}]);
+  hbar('t2maker',D.base.topSalesMakers,'#ea580c',170); hbar('t2cat',D.base.topSalesCategories,'#1d4ed8',170); hbar('t2ch',D.base.topSalesChannels,'#0f766e',230);
+
+  line('t3line',D.extra.buyMonthly.months,[{data:D.extra.buyMonthly.buy,color:'#ea580c'},{data:D.extra.buyMonthly.profit,color:'#7c3aed'}]);
+  hbar('t3store',D.base.buyStores,'#1d4ed8',120); hbar('t3method',D.base.buyMethods,'#0f766e',120);
+  const tb=document.querySelector('#t3tbl tbody'); D.extra.buyMonthly.months.forEach((m,i)=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${m}</td><td>${fmt.format(D.extra.buyMonthly.count[i])}</td><td>${yen(D.extra.buyMonthly.buy[i])}</td><td>${yen(D.extra.buyMonthly.profit[i])}</td>`; tb.appendChild(tr);});
+
+  hbar('t4lead',D.extra.lead.bucket,'#7c3aed',140);
+  hbar('t4sales',D.extra.prefCompare.map(x=>({name:x.name,value:x.sales})),'#1d4ed8',120);
+  hbar('t4buy',D.extra.prefCompare.map(x=>({name:x.name,value:x.buy})),'#ea580c',120);
+  donut('t4seg',D.extra.customer.sales_only,D.extra.customer.buy_only,'販売のみ','買取のみ');
+
+  line('t5rate',D.ac.months,[{data:D.ac.monthSeries.setRate,color:'#ea580c'}]);
+  hbar('t5co',D.ac.coTop.map(x=>({name:x.name,value:x.value})),'#7c3aed',150);
+  hbar('t5ch',D.ac.channelStats.slice(0,10).map(x=>({name:x.name,value:x.set_rate})),'#0f766e',230);
+  hbar('t5pref',D.ac.prefStats.slice(0,12).map(x=>({name:x.name,value:x.set_rate})),'#1d4ed8',120);
+  const tb5=document.querySelector('#t5tbl tbody'); D.ac.opportunities.slice(0,10).forEach(r=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${r.channel}</td><td>${fmt.format(r.ac_orders)}</td><td>${r.set_rate}%</td><td>${fmt.format(r.est_additional_sets)}</td>`; tb5.appendChild(tr);});
+
+  hbar('t6cat',D.base.topSalesCategories,'#1d4ed8',170);
+  hbar('t6maker',D.base.topSalesMakers,'#ea580c',170);
+  hbar('t6low',(D.extra.lowMarginCategories||[]).map(x=>({name:x.name,value:x.rate})),'#7c3aed',190);
+  hbar('t6portfolio',(D.extra.portfolioMakers||[]).slice(0,10).map(x=>({name:x.name,value:x.size})),'#0f766e',170);
+  const tb6=document.querySelector('#t6tbl tbody'); (D.extra.lowMarginCategories||[]).forEach(r=>{const tr=document.createElement('tr'); tr.innerHTML=`<td>${r.name}</td><td>${fmt.format(r.count)}</td><td>${r.rate}%</td><td>${yen(r.sales)}</td>`; tb6.appendChild(tr);});
+
+  const c = D.extra.customer || {sales_unique:0,buy_unique:0,overlap:0,sales_only:0,buy_only:0};
+  const customerTotal = c.sales_only + c.buy_only + c.overlap;
+  donut('t7seg',c.sales_only,c.buy_only,'販売のみ','買取のみ');
+  line('t7count',D.extra.buyMonthly.months,[{data:D.extra.buyMonthly.count,color:'#0f766e'}]);
+  hbar('t7ratio',D.extra.prefCompare.slice(0,15).map(x=>({name:x.name,value:x.ratio})),'#7c3aed',120);
+  hbar('t7activity',D.extra.prefCompare.slice(0,15).map(x=>({name:x.name,value:x.sales+x.buy})),'#1d4ed8',120);
+  const tb7=document.querySelector('#t7tbl tbody');
+  [
+    {name:'販売のみ',count:c.sales_only},
+    {name:'買取のみ',count:c.buy_only},
+    {name:'両方',count:c.overlap}
+  ].forEach(r=>{
+    const ratio = customerTotal ? (r.count/customerTotal*100).toFixed(2)+'%' : '0.00%';
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td>${r.name}</td><td>${fmt.format(r.count)}</td><td>${ratio}</td>`;
+    tb7.appendChild(tr);
+  });
+}
+
+function bindTabs(){document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));document.getElementById(b.dataset.id).classList.add('active');}));}
+
+build(); bindTabs(); render();
+</script>
+</body>
+</html>
